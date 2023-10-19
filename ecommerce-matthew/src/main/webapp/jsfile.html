@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Submission</title>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Get a reference to the form element
+        const form = document.getElementById('myForm');
+        // Add a submit event listener to the form
+        form.addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent the default form submission
+            // Get form data as a FormData object
+            const formData1 = new FormData(form);
+            const formData = new URLSearchParams();
+            //formData.append('uname', 'ramu');
+            //formData.append('upass', 'secret');
+            for (const [field, value] of formData1) {
+                console.log(`${field}: ${value}`);
+                formData.append(field,value);
+            }
+            // Define the URL of the RESTful endpoint
+            const apiUrl = 'http://localhost:8080/duplicateproject/rest/mat/login'; // Replace with your API URL
+            // Make a POST request to the API with the form data
+            fetch(apiUrl, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                mode:'no-cors'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                //return response.json(); // Parse the response as JSON
+                return response.text();
+            })
+            .then(data => {
+                // Handle the response data from the API
+                console.log('Response data:', data);
+                // You can perform further processing here
+            })
+            .catch(error => {
+                // Handle any errors that occurred during the fetch
+                console.error('Fetch error:', error);
+            });
+        });
+    });
+    </script>
+</head>
+<body>
+    <form action ="login" id="myForm" method="POST">
+        <label for="username">Name:</label>
+        <input type="text" id="uname" name="uname"><br><br>
+        <label for="password">Email:</label>
+        <input type="text" id="upass" name="upass"><br><br>
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>
+</body>
+</html>

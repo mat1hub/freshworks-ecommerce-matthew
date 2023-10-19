@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+<style>
+* {
+  box-sizing: border-box;
+}
+.card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  max-width: 300px;
+  margin: auto;
+  text-align: center;
+  font-family: arial;
+  
+  
+  flex:30%;
+  float: left;
+  width: 25%;
+  padding: 0 10px;
+}
+
+.price {
+  color: grey;
+  font-size: 22px;
+}
+
+.card button {
+  border: none;
+  outline: 0;
+  padding: 12px;
+  color: white;
+  background-color: #000;
+  text-align: center;
+  cursor: pointer;
+  width: 100%;
+  font-size: 18px;
+}
+
+.card button:hover {
+  opacity: 0.7;
+}
+/* Remove extra left and right margins, due to padding */
+.row {margin: 0 -5px;}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+.cartitem{
+display:flex;
+}
+
+
+/* Responsive columns */
+@media screen and (max-width: 600px) {
+  .card {
+    width: 100%;
+    display: block;
+    margin-bottom: 20px;
+  }
+}
+€‹
+
+</style>
+
+</head>
+<body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Submission</title>
+    <script>
+    document.addEventListener('DOMContentLoaded', function (){
+        // Get a reference to the form element
+        const form = document.getElementById('myForm');
+        // Add a submit event listener to the form
+        form.addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent the default form submission
+            // Get form data as a FormData object
+            const formData1 = new FormData(form);
+            const formData = new URLSearchParams();
+            console.log(formData1);
+            //formData.append('uname', 'ramu');
+            //formData.append('upass', 'secret');
+            for (const [field, value] of formData1) {
+               console.log(`${field}: ${value}`); 
+                formData.append(field,value);
+                
+            }
+            console.log("this is formdata" + formData);
+            // Define the URL of the RESTful endpoint
+            const apiUrl = 'http://localhost:8080/duplicateproject/rest/mat/login'; // Replace with your API URL
+            // Make a POST request to the API with the form data
+            fetch(apiUrl, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                mode:'no-cors'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                //return response.json(); // Parse the response as JSON
+                return response.text();
+            })
+            .then(data => {
+                // Handle the response data from the API
+                if(data=="login.success"){
+                	document.getElementById("myForm").style.display ="none";
+                	showProduct();
+                }
+                console.log('Response data:', data);
+                // You can perform further processing here
+            })
+            .catch(error => {
+                // Handle any errors that occurred during the fetch
+               
+                console.error('Fetch error:', error);
+            });
+        });
+    });
+   // function language(){
+    //	console.log("inside logout");
+        // Define the URL of the RESTful endpoint
+        //const apiUrl = 'http://localhost:8080/duplicateproject/rest/mat/language'; // Replace with your API URL
+        // Make a POST request to the API with the form data
+       // fetch(apiUrl, {
+          //  method: 'GET',
+           // body: formData,
+           // headers: {
+             //   'Content-Type': 'application/x-www-form-urlencoded',
+           // },
+        //    mode:'no-cors'
+       // })
+     //   .then(response => {
+           // if (!response.ok) {
+               // throw new Error('Network response was not ok');
+           // }
+            //return response.json(); // Parse the response as JSON
+          //  return response.text();
+      //  })
+        //.then(data => {
+            // Handle the response data from the API
+            //console.log('Response data:', data);
+            // You can perform further processing here
+        //})
+       // .catch(error => {
+      //      // Handle any errors that occurred during the fetch
+            //console.error('Fetch error:', error);
+       // });
+        ////////////////////////////////////////////////////////
+        function itemService(){
+        	console.log("inside itemService.!");
+            // Define the URL of the RESTful endpoint
+            const apiUrl = 'http://localhost:8080/duplicateproject/rest/mat/logout'; // Replace with your API URL
+            // Make a POST request to the API with the form data
+            fetch(apiUrl, {
+                method: 'GET',
+               // body: formData,
+               // headers: {
+                 //  'Content-Type': 'application/x-www-form-urlencoded',
+                //},
+                mode:'no-cors'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                //return response.json(); // Parse the response as JSON
+                return response.text();
+            })
+           .then(data => {
+                // Handle the response data from the API
+                console.log('Response data:', data);
+                // You can perform further processing here
+            })
+            .catch(error => {
+                // Handle any errors that occurred during the fetch
+                console.error('Fetch error:', error);
+           });
+        }
+        function showProduct(){
+        	console.log("inside showproducts.!");
+            // Define the URL of the RESTful endpoint
+            const apiUrl = 'http://localhost:8080/duplicateproject/rest/mat/showproduct/1'; // Replace with your API URL
+            // Make a POST request to the API with the form data
+            fetch(apiUrl, {
+                method: 'GET',
+               // body: formData,
+               // headers: {
+                 //  'Content-Type': 'application/x-www-form-urlencoded',
+                //},
+                mode:'no-cors'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json(); // Parse the response as JSON
+                return response.text();
+            })
+           .then(data => {
+                // Handle the response data from the API
+                console.log('Response data:', data);
+                // You can perform further processing here
+                for(i in data){
+               
+                  //  let productimage ="<div>" "</div>";
+                	let productcontent =" <div class ='card'><h1>"+data[i].productName+"</h1>";
+                	let price ='<p class="price">'+data[i].buyPrice+'</p>';
+                	
+                    let addtocart ='<p><button  onclick ="addtocart('+"'"+data[i].productCode+"'"+')">addtocart</button></p>'+'</div>';
+                     productcontent +=price;
+                     productcontent +=addtocart;
+                     
+                	document.getElementById("products").innerHTML +=productcontent;
+                	//document.getElementById("cartitems");
+                	console.log("products name is",data[i].productName);
+                	}
+            })
+        
+            .catch(error => {
+                // Handle any errors that occurred during the fetch
+                console.error('Fetch error:', error);
+           });
+        }
+        function addtocart(itemid){
+        	console.log("inside cartitem.!"+itemid);
+            // Define the URL of the RESTful endpoint
+            const apiUrl = 'http://localhost:8080/duplicateproject/rest/mat/additemtocart/'+itemid; // Replace with your API URL
+            // Make a POST request to the API with the form data
+            fetch(apiUrl, {
+                method: 'GET',
+               // body: formData,
+               // headers: {
+                 //  'Content-Type': 'application/x-www-form-urlencoded',
+                //},
+                mode:'no-cors'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json(); // Parse the response as JSON
+                return response.text();
+            })
+           .then(data => {
+                // Handle the response data from the API
+                console.log('Response data:', data);
+                // You can perform further processing here
+                for(i in data){              
+                  //  let productimage ="<div>" "</div>";                    
+                	document.getElementById("products").innerHTML +=productcontent;
+                	document.getElementById("cartitems");
+                	console.log("products name is",data[i].productName);
+                	}    
+            })
+        
+            .catch(error => {
+                // Handle any errors that occurred during the fetch
+                console.error('Fetch error:', error);
+           });
+        }    
+        function AddProduct(){
+        	console.log("inside itemService.!");
+            // Define the URL of the RESTful endpoint
+            const apiUrl = 'http://localhost:8080/duplicateproject/rest/mat/addproduct'; // Replace with your API URL
+            // Make a POST request to the API with the form data
+            fetch(apiUrl, {
+                method: 'GET',
+               body: formData,
+                headers: {
+                  'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                mode:'no-cors'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                //return response.json(); // Parse the response as JSON
+                return response.text();
+            })
+           .then(data => {
+                // Handle the response data from the API
+                console.log('Response data:', data);
+                // You can perform further processing here
+            })
+            .catch(error => {
+                // Handle any errors that occurred during the fetch
+                console.error('Fetch error:', error);
+           });
+        }
+        function logout(){
+        	console.log("inside itemService.!");
+            // Define the URL of the RESTful endpoint
+            const apiUrl = 'http://localhost:8080/duplicateproject/rest/mat/logout'; // Replace with your API URL
+            // Make a POST request to the API with the form data
+            fetch(apiUrl, {
+                method: 'GET',
+               // body: formData,
+               // headers: {
+                 //  'Content-Type': 'application/x-www-form-urlencoded',
+                //},
+                mode:'no-cors'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                //return response.json(); // Parse the response as JSON
+                return response.text();
+            })
+           .then(data => {
+                // Handle the response data from the API
+                console.log('Response data:', data);
+                // You can perform further processing here
+            })
+            .catch(error => {
+                // Handle any errors that occurred during the fetch
+                console.error('Fetch error:', error);
+           });
+        }
+
+    </script>
+</head>
+<body>
+<button onclick ="itemService()" >logout</button>
+    <form action ="login" id="myForm" method="POST">
+        <label for="username">Name:</label>
+        <input type="text" id="uname" name="username"><br><br>
+        <label for="password">Email:</label>
+        <input type="text" id="upass" name="password"><br><br>
+        <input type="submit" value="Submit">
+    </form>
+    <div id ="products"></div>
+</body>
+</html>
