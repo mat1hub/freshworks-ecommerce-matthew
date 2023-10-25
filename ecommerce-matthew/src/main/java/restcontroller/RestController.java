@@ -47,6 +47,12 @@ public class RestController {
 	private HttpServletRequest request;
 	@Context
 	private HttpServletResponse response;
+	
+	CustomerDTO customer;
+	 @Context
+	 private ServletContext context;
+
+	
 	public  RestController() {
 		rp=new RequestProcessor();
 		
@@ -67,16 +73,22 @@ public class RestController {
 	String uname=req.getUsername();
 	String upass=req.getPassword();
 	
+	//String uname=request.getParameter("username");
+	//String upass=request.getParameter("password");
+	
 	CustomerService cs=CustomerServiceImpl.getServiceImpl();
 	if(cs.checkUser(uname,upass)) {
 		
 		
 		if(cs.checkFlag(uname)) {
-			HttpSession session=request.getSession();
+			HttpSession session=request.getSession(true);
+					System.out.println(session.getId());
 		CustomerDTO cdto=cs.findByName(uname);
 			session.setAttribute("uname", uname);
 			session.setAttribute("customerid", cdto.getCustomerid());
 			session.setAttribute("user_profile", cdto);
+			setCustomer(cdto);
+			context.setAttribute("user_profile", cdto);
 			cs.updateFlag(1, uname);
 			resp=new BasicHttpResponse(200, "success", false);
 			return resp;
@@ -99,10 +111,12 @@ public class RestController {
 	@Produces(MediaType.APPLICATION_JSON)
 	public BasicHttpResponse logout() {
 		request.setAttribute("formid","logout");
-		HttpSession session=request.getSession();
+		HttpSession session=request.getSession(true);
 		/*String uname=session.getAttribute("uname").toString();
 		CustomerService cs=CustomerServiceImpl.getServiceImpl();
 		cs.updateFlag(0, uname);*/	
+		session.invalidate();
+		customer=null;
 		BasicHttpResponse resp=new BasicHttpResponse(200, "success", false);
 		return resp;
 
@@ -130,6 +144,8 @@ public class RestController {
 	@Produces(MediaType.APPLICATION_JSON)
  	public BasicHttpResponse register(RegisterRequest req) {
 		
+		///register?name=Matthew&password=Matthew&mobileno=29279879&email=email@email.com
+		
 		BasicHttpResponse resp=null;
 		CustomerService cs=CustomerServiceImpl.getServiceImpl();
 		String uname=req.getUname();
@@ -137,7 +153,7 @@ public class RestController {
 		String mobileNo=req.getMobileNo();
 		String email=req.getEmail();
 		CustomerDTO dto=new CustomerDTO();
-		if(cs.findByName(uname)!=null)
+		if(cs.findByName(uname)==null)
 		{
 			dto.setCustomername(uname);
 			dto.setPassword(upass);
@@ -145,9 +161,8 @@ public class RestController {
 			dto.setEmailId(email);
 			dto.setActiveFlag(1);
 			cs.insertCustomer(dto);
-			ResourceBundle rb=ResourceBundle.getBundle("dictionary");
-			String result = rb.getString("register.success");
-			resp=new BasicHttpResponse(200,result,false);
+			
+			resp=new BasicHttpResponse(200,"success",false);
 			
 			return resp;
 		}
@@ -155,6 +170,19 @@ public class RestController {
 		
 		return new BasicHttpResponse(200,"user already exists",true);
 		
+		
+	}
+	
+	@GET
+	@Path("/profile")
+	@Produces(MediaType.APPLICATION_JSON)
+ 	public CustomerDTO profile() {
+		
+			
+		HttpSession session=request.getSession();
+		CustomerDTO dto=(CustomerDTO)session.getAttribute("user_profile");
+		System.out.println(dto);
+		return dto;
 		
 	}
 	
@@ -164,6 +192,7 @@ public class RestController {
 	@Produces(MediaType.APPLICATION_JSON)
  	public BasicHttpResponse editProfile(RegisterRequest req) {
 		
+		HttpSession session=request.getSession();
 		BasicHttpResponse resp=null;
 		CustomerService cs=CustomerServiceImpl.getServiceImpl();
 		String uname=req.getUname();
@@ -171,6 +200,7 @@ public class RestController {
 		String mobileNo=req.getMobileNo();
 		String email=req.getEmail();
 		CustomerDTO dto=new CustomerDTO();
+		CustomerDTO cobj=cs.findByName(uname);
 		if(cs.findByName(uname)!=null)
 		{
 			dto.setCustomername(uname);
@@ -178,16 +208,18 @@ public class RestController {
 			dto.setMobileno(mobileNo);
 			dto.setEmailId(email);
 			dto.setActiveFlag(1);
+			dto.setCustomerid(cobj.getCustomerid());
+			
 			cs.editCustomer(dto);
-			ResourceBundle rb=ResourceBundle.getBundle("dictionary");
-			String result = rb.getString("register.success");
-			resp=new BasicHttpResponse(200,result,false);
+			session.setAttribute("user_profile",dto);
+			
+			resp=new BasicHttpResponse(200,"Profile is updated successfully ",false);
 			
 			return resp;
 		}
 		
 		
-		return new BasicHttpResponse(200,"user already exists",true);
+		return new BasicHttpResponse(200,"Failed to edit profile",true);
 		
 		
 	}
@@ -196,7 +228,7 @@ public class RestController {
 	
 	// ==================== Shop Operations (Add Shop , Edit Shop , List Shop,  Delete  Shop ======//
 	
-	
+	@POST
 	@Path("/addShop")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -260,8 +292,8 @@ public class RestController {
 				
 	}
 	
-	@Path("/shop")
-	@Consumes(MediaType.APPLICATION_JSON)
+	@GET
+	@Path("/shop")	
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<ShopDTO>  listShop(){
 		
@@ -275,7 +307,7 @@ public class RestController {
 	
 	// ==================== Product Operations (Add Products , Find Products , Edit product, Delete Product ======//
 	
-	
+	@POST
 	@Path("/addProduct")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -376,9 +408,9 @@ public class RestController {
 	// ==================== Shopping Cart Operations (Add ItemToCart , Remove Item from Cart , list items in the cart) ======//
 
 	@GET
-	@Path("/additemtocart/{productID}")
+	@Path("/additemtocart/{productID}/{shopID}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public BasicHttpResponse addItemToCart(@PathParam("productID") String productID,
+	public BasicHttpResponse addItemToCart(@PathParam("productID") String productID,@PathParam("shopID") int shopID,
 			@QueryParam("id") int id ,@QueryParam("name") String name) {
 		BasicHttpResponse bhttpResp=new  BasicHttpResponse();
 		
@@ -392,7 +424,16 @@ public class RestController {
 		sdto.setIsactive(1);
 		
 		
+		
 		int response=scs.insertProduct(sdto);
+		
+		ShoppingCartItemService scis =ShoppingCartItemServiceImpl.getServiceImpl();	
+		ShoppingCartItemDTO scid=new ShoppingCartItemDTO();
+		scid.setShoppingcartid(sdto.getShoppingcartid());
+		scid.setProductcode(productID);
+		scid.setQuantity(1);
+		scid.setShopid(shopID);
+		response=scis.addItem(scid);
 		
 		bhttpResp.setMsg(response==1?"Item added to cart Successfully":"Item failed to add to the cart");
 		bhttpResp.setHasError(response==0);
@@ -487,6 +528,16 @@ public class RestController {
 		
 		
 	}
+
+	public CustomerDTO getCustomer() {
+		return customer;
+	}
+
+	public void setCustomer(CustomerDTO customer) {
+		this.customer = customer;
+	}
+	
+	
 	
 }
 	

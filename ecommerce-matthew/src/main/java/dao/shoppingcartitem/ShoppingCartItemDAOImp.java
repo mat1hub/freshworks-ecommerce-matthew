@@ -11,7 +11,7 @@ package dao.shoppingcartitem;
 import dao.product.ProductDto;
 import service.ShoppingCartServiceImpl;
 
-	public class ShoppingCartItemDAOImp implements ShoppingCartItemDAO{
+	public class ShoppingCartItemDAOImp implements ShoppingCartItemDAO,Cloneable{
       
 		private static ShoppingCartItemDAOImp cs;
 		
@@ -68,17 +68,20 @@ import service.ShoppingCartServiceImpl;
 			PreparedStatement ps;
 			try {
 				Connection con=ConnectionUtility.getConnection();
-				ps=con.prepareStatement("insert into shoppingcartitem values (?,?,?,?,?,?,?)");
-				ps.setInt(1, addProduct.getShoppingcartitemid());
-				ps.setInt(2, addProduct.getShoppingcartid());
-				ps.setString(3, addProduct.getProductcode());
+				ps=con.prepareStatement("insert into shoppingcartitem(shoppingcartid,is_active,last_updated_date,quantity,productCode) values (?,?,?,?,?)");
+				//ps.setInt(1, addProduct.getShoppingcartitemid());
+				ps.setInt(1, addProduct.getShoppingcartid());
+				ps.setInt(2, 1);
+				ps.setDate(3, new java.sql.Date(System.currentTimeMillis()));
+				
 				ps.setInt(4, addProduct.getQuantity());
-				ps.setInt(5, addProduct.getIsactive());
-				ps.setDate(6, addProduct.getLastupdateddate());
-				ps.setInt(7, addProduct.getShopid());
+				ps.setString(5, addProduct.getProductcode());
+				
+				
 				ps.executeUpdate();
 				ConnectionUtility.closeConnection(null, null);
 			}catch(Exception e) {
+				System.out.println(e);
 				ConnectionUtility.closeConnection(e, null);
 				return 0;
 			}

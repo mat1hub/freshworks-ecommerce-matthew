@@ -1,12 +1,13 @@
 var baseAPIURL="http://localhost:8080/ecommerce-matthew/";
 
 
-async function post_api_call(apiUrl,formData,contentType){
+async function post_api_call(apiUrl,bodydata,contentType){
 
     
 const data= await fetch(baseAPIURL+apiUrl, {
     method: 'POST',
-    body: formData,
+    credentials: 'include',
+    body: bodydata,
     headers: {
         'Content-Type': contentType,
         'Accept': "application/json"
@@ -43,7 +44,8 @@ return data;
 async function get_api_call(apiUrl,contentType){
 
  return await    fetch(baseAPIURL+apiUrl, {
-        method: 'GET'
+        method: 'GET',
+        credentials: 'include'
     })
     .then(response => {
         console.log(response);

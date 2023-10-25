@@ -25,8 +25,8 @@ const Register = () => {
         smsg=values['msg'];
         if(values['msg'] ==="success"){
 
-            localStorage.setItem("authenticated", "true");
-            navigate("/");
+           // localStorage.setItem("authenticated", "true");
+            navigate("/login");
        }
     });
 
@@ -44,6 +44,7 @@ const Register = () => {
       <form onSubmit={handleSubmit} className="form__container" method="post">
       <div className="form__controls">
       {smsg}
+      
 <label htmlFor="Username">Username</label>
  <input
  type="text"
@@ -78,9 +79,10 @@ const Register = () => {
  </div>
  <div className="form__controls">
  <button type="submit" value="Submit" className="button" >Register</button>
- 
+
  </div>
  </form>
+ 
     </div>
   );
 };

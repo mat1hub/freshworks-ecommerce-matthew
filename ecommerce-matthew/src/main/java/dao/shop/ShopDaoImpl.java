@@ -10,7 +10,7 @@ import java.util.List;
 
 import control.ConnectionUtility;
 
-public class ShopDaoImpl implements ShopDao{
+public class ShopDaoImpl implements ShopDao,Cloneable{
 	public ShopDaoImpl() {
 		System.out.println("ShoppingCart DAO impl object created...");
 		
@@ -99,8 +99,8 @@ public class ShopDaoImpl implements ShopDao{
 			ps.setString(3, shop.getAddress());
 			ps.setString(4, shop.getCity());
 			ps.setString(5, shop.getPincode());
-			ps.setInt(6, shop.getActive());
-			ps.setDate(7, new java.sql.Date(shop.getLastUpdatedDateTime().getTime()));
+			ps.setInt(6, 1);
+			ps.setDate(7, new java.sql.Date(System.currentTimeMillis()));
 			
 			
 			ps.executeUpdate();
@@ -161,13 +161,9 @@ public class ShopDaoImpl implements ShopDao{
 	public List<ShopDTO> findAll(){
 		PreparedStatement ps;
 		try {
-		//Connection con=ConnectionUtility.getConnection();
-			//System.out.println(con);
-			String url ="jdbc:mysql://localhost:3306/vastpro";
-			String username ="root";
-			String password ="vastpro";
-			Connection con=DriverManager.getConnection(url,username,password);
-			ps=con.prepareStatement("select * from shop");
+		Connection con=ConnectionUtility.getConnection();
+			
+		 ps=con.prepareStatement("select * from shop");
 			
 			ResultSet rs=ps.executeQuery();
 			List<ShopDTO> list =new ArrayList<>();

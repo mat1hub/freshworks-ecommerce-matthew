@@ -78,7 +78,7 @@ public List<ProductDto> findAll() {
 	PreparedStatement ps;
 	try {
 		Connection con=ConnectionUtility.getConnection();
-		ps=con.prepareStatement("select productCode,productName,productDescription,quantityInStock,buyPrice,MSRP,productImage from products");
+		ps=con.prepareStatement("select productCode,productName,productDescription,quantityInStock,buyPrice,MSRP,productImage,shopid from products");
 		
 		ResultSet rs=ps.executeQuery();
 		List<ProductDto> list=new ArrayList<ProductDto>();
@@ -91,7 +91,7 @@ public List<ProductDto> findAll() {
 			dto.setBuyPrice(rs.getDouble(5));
 			dto.setMsrp(rs.getDouble(6));
 			dto.setProductImage(rs.getString(7));
-
+			dto.setShopid(rs.getInt(8));
 			list.add(dto);
 		}
 		ConnectionUtility.closeConnection(null, null);
@@ -172,17 +172,20 @@ public int insertProduct(ProductDto pto) {
 	PreparedStatement ps;
 	try {
 		Connection con=ConnectionUtility.getConnection();
-		ps=con.prepareStatement("insert into products values (?,?,?,?,?,?)");
+		ps=con.prepareStatement("insert into products(productCode,productImage,productName,productDescription,quantityInStock,buyPrice,MSRP,shopid)"
+				+ "  values (?,?,?,?,?,?,?,?)");
 		ps.setString(1, pto.getProductCode());
-		ps.setString(2, pto.getProductName());
-		ps.setString(3, pto.getProductDescription());
-		ps.setInt(4, pto.getQuantityInStock());
-		ps.setDouble(5, pto.getBuyPrice());
-		ps.setDouble(6, pto.getQuantityInStock());
-		ps.setInt(7, pto.getShopid());
+		ps.setString(2, pto.getProductImage());
+		ps.setString(3, pto.getProductName());
+		ps.setString(4, pto.getProductDescription());
+		ps.setInt(5, pto.getQuantityInStock());
+		ps.setDouble(6, pto.getBuyPrice());
+		ps.setDouble(7, pto.getMsrp());
+		ps.setInt(8, pto.getShopid());
 		ps.executeUpdate();
 		ConnectionUtility.closeConnection(null, null);
 	}catch(Exception e) {
+		System.out.print(e);
 		ConnectionUtility.closeConnection(e, null);
 		return 0;
 	}

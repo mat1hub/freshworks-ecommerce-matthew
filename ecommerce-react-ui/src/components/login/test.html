@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+    <meta charset="UTF-8">
+<head>
+    <script>
+            
+    const formData = new URLSearchParams();
+
+           
+    formData.append("username","Matthew");
+    formData.append("password","Matthew"); 
+
+    async function callAPi(){
+     
+                
+       
+        
+       return await   fetch('http://localhost:8080/ecommerce-matthew/rest/mat/login',{
+            method:'POST',
+            body: formData,
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Accept': "application/json",
+                },
+                mode:'no-cors'
+           })
+           .then(response => {
+		console.log(response);
+                // if (!response.ok) {
+                //     throw new Error('Network response was not ok');
+                // }
+                //return response.json(); // Parse the response as JSON
+                return response.json();
+            })
+            .then(data => {
+                // Handle the response data from the API
+                // if(data=="login.success"){
+                // 	//document.getElementById("myForm").style.display ="none";
+                // 	//showProduct();
+
+                // }
+                console.log('Response data:', data);
+                // You can perform further processing here
+            })
+            .catch(error => {
+                // Handle any errors that occurred during the fetch
+               
+                console.error('Fetch error:', error);
+            });
+    
+          }
+ 
+    
+    
+        
+        </script>
+</head>
+    <body>
+    <button type="button" onClick="callApi()">Submit</button>
+    </body>
+</html>

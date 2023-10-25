@@ -14,7 +14,7 @@ public class RequestProcessor {
 	public String process(HttpServletRequest request,HttpServletResponse response) {
 		try {
 		HttpSession session=request.getSession();
-		session.setMaxInactiveInterval(600);
+		session.setMaxInactiveInterval(6000);
 		ServletContext ctx=request.getServletContext();
 		Properties prop=(Properties)ctx.getAttribute("prop");
 		

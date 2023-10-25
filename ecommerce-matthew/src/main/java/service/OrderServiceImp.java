@@ -9,7 +9,7 @@ import dao.product.ProductDao;
 import dao.product.ProductDaoImpl;
 import dao.product.ProductDto;
 
-public class OrderServiceImp implements OrderService {
+public class OrderServiceImp implements OrderService,Cloneable {
 	private static OrderServiceImp cs;
 	
 	synchronized public static OrderServiceImp getOrderImp() {

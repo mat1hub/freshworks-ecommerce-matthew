@@ -13,7 +13,7 @@ import dao.customer.CustomerDAOImpl;
 import dao.product.ProductDto;
 import dao.shoppingcart.ShoppingCartDTO;
 
-public class ShoppingCartDAOImpl implements ShoppingCartDAO,Comparable<ShoppingCartDAO>{
+public class ShoppingCartDAOImpl implements ShoppingCartDAO,Comparable<ShoppingCartDAO>,Cloneable{
 	
 
 	private static ShoppingCartDAOImpl cs;

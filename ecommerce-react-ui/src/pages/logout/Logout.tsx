@@ -13,7 +13,7 @@ const Logout = (props: Props) => {
     
     get_api_call('rest/mat/logout','application/json')
     .then(values=>{
-       
+      
         if(values['msg'] ==="success"){
          
             const loggedInUser = localStorage.getItem("authenticated");

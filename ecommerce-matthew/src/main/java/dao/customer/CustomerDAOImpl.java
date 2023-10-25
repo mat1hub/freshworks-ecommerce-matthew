@@ -70,7 +70,9 @@ public class CustomerDAOImpl implements CustomerDAO,Cloneable{
 				dto.setCustomerid(rs.getInt(1));
 				dto.setCustomername(rs.getString(2));
 				dto.setPassword(rs.getString(3));
-				dto.setActiveFlag(rs.getInt(4));
+				dto.setMobileno(rs.getString(4));
+				dto.setEmailId(rs.getString(5));
+				dto.setActiveFlag(rs.getInt(7));
 			}
 			ConnectionUtility.closeConnection(null, null);
 			return dto;			
@@ -119,7 +121,9 @@ public class CustomerDAOImpl implements CustomerDAO,Cloneable{
 				dto.setCustomerid(rs.getInt(1));
 				dto.setCustomername(rs.getString(2));
 				dto.setPassword(rs.getString(3));
-				dto.setActiveFlag(rs.getInt(4));
+				dto.setMobileno(rs.getString(4));
+				dto.setEmailId(rs.getString(5));
+				dto.setActiveFlag(rs.getInt(7));
 
 			}
 			else {
@@ -163,11 +167,14 @@ public class CustomerDAOImpl implements CustomerDAO,Cloneable{
 			ps.setInt(1, dto.getCustomerid());
 			ResultSet rs=ps.executeQuery();
 			if(rs.next()) {
-				ps=con.prepareStatement("update customer set customername=?, password=?, is_active=? where customerid=?");
-				ps.setInt(1, dto.getCustomerid());
-				ps.setString(2, dto.getCustomername());
-				ps.setString(3, dto.getPassword());
-				ps.setInt(4, dto.getActiveFlag());
+				ps=con.prepareStatement("update customer set customername=?, password=?, is_active=? , mobileno=? , emailId=? where customerid=?");
+				
+				ps.setString(1, dto.getCustomername());
+				ps.setString(2, dto.getPassword());
+				ps.setInt(3, dto.getActiveFlag());
+				ps.setString(4, dto.getMobileno());
+				ps.setString(5, dto.getEmailId());
+				ps.setInt(6, dto.getCustomerid());
 				ps.executeUpdate();
 			}
 			else {

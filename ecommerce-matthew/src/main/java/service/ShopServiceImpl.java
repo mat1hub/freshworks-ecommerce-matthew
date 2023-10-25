@@ -58,7 +58,7 @@ public class ShopServiceImpl implements ShopService,Cloneable{
 	}
 	@Override
 	public List<ShopDTO> findAll() {
-		// TODO Auto-generated method stub
-		return null;
+		ShopDao sdao=ShopDaoImpl.getServiceImpl();
+		return sdao.findAll();
 	}
 }

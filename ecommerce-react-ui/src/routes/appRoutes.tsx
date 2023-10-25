@@ -8,7 +8,7 @@ import AppsOutlinedIcon from '@mui/icons-material/AppsOutlined';
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined';
 import FormatListBulletedOutlinedIcon from '@mui/icons-material/FormatListBulletedOutlined';
 import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
-
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import Profile from "../pages/profile/Profile";
 import Orders from "../pages/orders/Orders";
 import Logout from "../pages/logout/Logout";
@@ -19,6 +19,7 @@ import ShopPageLayout from "../pages/shop/ShopPageLayout";
 import ProductPageLayout from "../pages/products/ProductPageLayout";
 import AddProduct from "../pages/products/AddProduct";
 import ViewProduct from "../pages/products/ViewProduct";
+import ShoppingCart from "../pages/ShoppingCart/ShoppingCart";
 
 const appRoutes: RouteType[] = [
  
@@ -95,6 +96,15 @@ const appRoutes: RouteType[] = [
     sidebarProps: {
       displayText: "Profile",
       icon: <ArticleOutlinedIcon />
+    }
+  },
+  {
+    path: "/shoppingCart",
+    element: <ShoppingCart />,
+    state: "shoppingcart",
+    sidebarProps: {
+      displayText: "ShoppingCart",
+      icon: <ShoppingCartIcon />
     }
   },
   {

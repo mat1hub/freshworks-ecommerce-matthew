@@ -11,7 +11,7 @@ import control.ConnectionUtility;
 import dao.customer.CustomerDAOImpl;
 import dao.product.ProductDto;
 
-public class OrderDAOImpl implements OrderDAO{
+public class OrderDAOImpl implements OrderDAO,Cloneable{
 	
 private static OrderDAOImpl cs;
 	
@@ -37,8 +37,8 @@ private static OrderDAOImpl cs;
 		PreparedStatement ps;
 		try {
 			Connection con=ConnectionUtility.getConnection();
-			ps=con.prepareStatement("select o.* from order o join shoppingcart sc "
-					+ "on o.shoppingcartid=sc.shoppingcart where sc.customerid=?");
+			ps=con.prepareStatement("select o.* from vastpro.order o join vastpro.shoppingcart sc "
+					+ "on o.shoppingcartid=sc.shoppingcartid where sc.customerid=?");
 			ps.setInt(1, customerid);
 			ResultSet rs=ps.executeQuery();
 			List<OrderDTO> list = new ArrayList<OrderDTO>();
@@ -152,12 +152,15 @@ private static OrderDAOImpl cs;
 		PreparedStatement ps;
 		try {
 			Connection con=ConnectionUtility.getConnection();
-			ps=con.prepareStatement("insert into order values (?,?)");
+			ps=con.prepareStatement("insert into vastpro.order(shoppingcartid,last_updated_date) values (?,?)");
 			
 			ps.setInt(1, shoppingCartId);
 			ps.setDate(2, new java.sql.Date(System.currentTimeMillis()));
-	
+			
 			ps.executeUpdate();
+			ConnectionUtility.closeConnection(null, null);
+		    con=ConnectionUtility.getConnection();
+			
 			
 			ps=con.prepareStatement("update shoppingcart set is_active=0  where shoppingcartid=?");
 			ps.setInt(1, shoppingCartId);
@@ -165,6 +168,7 @@ private static OrderDAOImpl cs;
 			//ps.execute();
 			ConnectionUtility.closeConnection(null, null);
 		}catch(Exception e) {
+			System.out.println(e);
 			ConnectionUtility.closeConnection(e, null);
 			return 0;
 		}
